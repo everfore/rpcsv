@@ -19,7 +19,7 @@ func main() {
 	_rpc := new(RPC)
 	server := rpc.NewServer()
 	server.Register(_rpc)
-	lis, err := net.Listen("tcp", ":8099")
+	lis, err := net.Listen("tcp", ":80")
 	if goutils.CheckErr(err) {
 		return
 	}

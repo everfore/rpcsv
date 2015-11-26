@@ -11,8 +11,8 @@ func main() {
 	in := []byte("#   [Hello](http://mdblog.daoapp.io/)")
 	out := make([]byte, 10)
 
-	addr, err := net.ResolveTCPAddr("tcp", "127.0.0.1:80")
-	// addr, err := net.ResolveTCPAddr("tcp", "rpcsvr.daoapp.io:80")
+	// addr, err := net.ResolveTCPAddr("tcp", "127.0.0.1:80")
+	addr, err := net.ResolveTCPAddr("tcp", "rpcsvr.daoapp.io:80")
 	if goutils.CheckErr(err) {
 		return
 	}

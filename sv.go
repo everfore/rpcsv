@@ -52,16 +52,16 @@ func (r *RPC) Markdown(in, out *([]byte)) error {
 	return nil
 }
 
-func RPCServe(port string) error {
+func RPCServe(port string) (net.Listener, error) {
 	_rpc := new(RPC)
 	server := rpc.NewServer()
 	server.Register(_rpc)
 	lis, err := net.Listen("tcp", ":"+port)
 	if goutils.CheckErr(err) {
-		return err
+		return nil, err
 	}
 	go server.Accept(lis)
-	return nil
+	return lis, nil
 }
 
 var (

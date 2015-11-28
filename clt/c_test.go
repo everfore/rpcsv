@@ -9,8 +9,12 @@ import (
 	"testing"
 )
 
+var (
+	lis net.Listener
+)
+
 func init() {
-	rpcsv.RPCServe("8800")
+	lis, _ = rpcsv.RPCServe("8800")
 }
 func TestC(t *testing.T) {
 	in := []byte("#   [Hello](http://mdblog.daoapp.io/)")
@@ -37,8 +41,10 @@ func TestC(t *testing.T) {
 
 func TestRPC(t *testing.T) {
 	c := RPCClient("127.0.0.1:8800")
+	defer c.Close()
 	in := []byte("#   [Hi](http://mdblog.daoapp.io/)")
 	out := make([]byte, 10)
 	Markdown(c, &in, &out)
 	fmt.Println(goutils.ToString(out))
+	defer lis.Close()
 }

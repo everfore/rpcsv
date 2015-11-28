@@ -1,18 +1,19 @@
-package main
+package clt
 
 import (
 	"fmt"
 	"github.com/shaalx/goutils"
 	"net"
 	"net/rpc"
+	"testing"
 )
 
-func main() {
+func TestC(t *testing.T) {
 	in := []byte("#   [Hello](http://mdblog.daoapp.io/)")
 	out := make([]byte, 10)
 
-	// addr, err := net.ResolveTCPAddr("tcp", "127.0.0.1:80")
-	addr, err := net.ResolveTCPAddr("tcp", "rpcsvr.daoapp.io:80")
+	addr, err := net.ResolveTCPAddr("tcp", "127.0.0.1:88")
+	// addr, err := net.ResolveTCPAddr("tcp", "rpcsvr.daoapp.io:88")
 	if goutils.CheckErr(err) {
 		return
 	}
@@ -28,4 +29,12 @@ func main() {
 		return
 	}
 	fmt.Println(string(out))
+}
+
+func TestRPC(t *testing.T) {
+	c := RPCClient("127.0.0.1:88")
+	in := []byte("#   [Hello](http://mdblog.daoapp.io/)")
+	out := make([]byte, 10)
+	Markdown(c, &in, &out)
+	fmt.Println(goutils.ToString(out))
 }

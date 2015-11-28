@@ -1,88 +1,4 @@
-package rpcsv
-
-import (
-	"github.com/shaalx/goutils"
-	md "github.com/shurcooL/github_flavored_markdown"
-	"net"
-	"net/rpc"
-
-	// "bytes"
-	// "fmt"
-	"html/template"
-	"os"
-)
-
-type RPC struct {
-}
-
-func NewBufWriter() *BufWriter {
-	return &BufWriter{
-		buf: make([]byte, 1000, 1024),
-	}
-}
-
-type BufWriter struct {
-	buf []byte
-}
-
-func (w *BufWriter) Write(p []byte) (n int, err error) {
-	w.buf = p
-	return len(w.buf), nil
-}
-
-func (w *BufWriter) Bytes() []byte {
-	return w.buf
-}
-
-func (r *RPC) Markdown(in, out *([]byte)) error {
-	html := md.Markdown(*in)
-	goutils.DeleteFile("random.tmp")
-	of, _ := os.OpenFile("random.tmp", os.O_CREATE|os.O_WRONLY, 0666)
-	defer of.Close()
-	data := make(map[string]interface{})
-	data["MDContent"] = template.HTML(goutils.ToString(html))
-	data["Title"] = "mdbg"
-	err := theme.Execute(of, data)
-	if goutils.CheckErr(err) {
-		return err
-	}
-	*out = goutils.ReadFile("random.tmp")
-	// fmt.Println(goutils.ToString(html))
-	// fmt.Println("out:", goutils.ToString(*out))
-	return nil
-}
-
-func RPCServe(port string) error {
-	_rpc := new(RPC)
-	server := rpc.NewServer()
-	server.Register(_rpc)
-	lis, err := net.Listen("tcp", ":"+port)
-	if goutils.CheckErr(err) {
-		return err
-	}
-	go server.Accept(lis)
-	return nil
-}
-
-var (
-	theme    *template.Template
-	theme_bs []byte
-)
-
-func init() {
-	theme_bs = goutils.ReadFile("theme.thm")
-	if nil == theme_bs {
-		theme_bs = goutils.ToByte(theme_s)
-	}
-	var err error
-	theme, err = template.New("theme.thm").Parse(goutils.ToString(theme_bs))
-	if err != nil {
-		panic("theme error")
-	}
-}
-
-const (
-	theme_s = `<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8">
@@ -101,6 +17,9 @@ const (
 				<div class="collapse navbar-collapse navbar-ex1-collapse">
 					<ul class="nav navbar-nav" id="menu">
 						<li><a href="/">Home</a></li>
+						<li><a href="/Go">Go</a></li>
+						<li><a href="/Linux">Linux</a></li>
+						<li><a href="/Item">Item</a></li>
 					</ul>
 				</div>
 			</nav>
@@ -144,12 +63,12 @@ const (
 		  <td class="value">4</td>
 		</tr>
 		<tr>
-		  <td class="status-label">Java</td>
-		  <td class="value">0</td>
+		  <td class="status-label">Item</td>
+		  <td class="value">3</td>
 		</tr>
 		<tr>
-		  <td class="status-label">Others</td>
-		  <td class="value">0</td>
+		  <td class="status-label">Linux</td>
+		  <td class="value">4</td>
 		</tr>
 	  </tbody>
 	</table>
@@ -169,5 +88,4 @@ const (
 		</footer>
 		</div>
 	</body>
-</html>`
-)
+</html>

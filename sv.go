@@ -36,7 +36,7 @@ func (w *BufWriter) Bytes() []byte {
 
 func (r *RPC) Markdown(in, out *([]byte)) error {
 	html := md.Markdown(*in)
-	// bw := NewBufWriter()
+	goutils.DeleteFile("random.tmp")
 	of, _ := os.OpenFile("random.tmp", os.O_CREATE|os.O_WRONLY, 0666)
 	defer of.Close()
 	data := make(map[string]interface{})

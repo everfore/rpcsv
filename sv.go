@@ -81,6 +81,19 @@ func init() {
 	}
 }
 
+func UpdataTheme() bool {
+	theme_bs = goutils.ReadFile("theme.thm")
+	if nil == theme_bs {
+		theme_bs = goutils.ToByte(theme_s)
+	}
+	var err error
+	theme, err = template.New("theme.thm").Parse(goutils.ToString(theme_bs))
+	if err != nil {
+		panic("theme error")
+	}
+	return true
+}
+
 const (
 	theme_s = `<!DOCTYPE html>
 <html>

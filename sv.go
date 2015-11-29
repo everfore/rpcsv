@@ -36,17 +36,16 @@ func (w *BufWriter) Bytes() []byte {
 
 func (r *RPC) Markdown(in, out *([]byte)) error {
 	html := md.Markdown(*in)
-	goutils.DeleteFile("random.tmp")
-	of, _ := os.OpenFile("random.tmp", os.O_CREATE|os.O_WRONLY, 0666)
+	goutils.DeleteFile("tempory.tmp")
+	of, _ := os.OpenFile("tempory.tmp", os.O_CREATE|os.O_WRONLY, 0666)
 	defer of.Close()
 	data := make(map[string]interface{})
 	data["MDContent"] = template.HTML(goutils.ToString(html))
-	data["Title"] = "mdbg"
 	err := theme.Execute(of, data)
 	if goutils.CheckErr(err) {
 		return err
 	}
-	*out = goutils.ReadFile("random.tmp")
+	*out = goutils.ReadFile("tempory.tmp")
 	// fmt.Println(goutils.ToString(html))
 	// fmt.Println("out:", goutils.ToString(*out))
 	return nil
@@ -99,7 +98,7 @@ const (
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>{{.Title}}</title>
+	<title>mdbgEg</title>
 	<link rel="shortcut icon" href="http://7xku3c.com1.z0.glb.clouddn.com/China.ico" type="image/x-icon">
 	<link href="http://7xku3c.com1.z0.glb.clouddn.com/md_style.css" rel="stylesheet">
 

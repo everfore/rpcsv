@@ -14,7 +14,7 @@ var (
 )
 
 func init() {
-	lis, _ = rpcsv.RPCServe("8800")
+	// lis, _ = rpcsv.RPCServe("8800")
 }
 func TestC(t *testing.T) {
 	in := []byte("#   [Hello](http://mdblog.daoapp.io/)")

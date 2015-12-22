@@ -10,4 +10,4 @@ RUN go build -o clt main.go
 
 EXPOSE 80
 
-CMD ["/app/gopath/clt"]
+CMD ["/app/gopath/clt/clt"]

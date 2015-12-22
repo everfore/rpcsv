@@ -1,13 +1,13 @@
 FROM golang
 
 ENV GOPATH /app/gopath
-WORKDIR /app/gopath
+WORKDIR /app/gopath/clt
 COPY . /app/gopath/
 
 RUN go get github.com/everfore/rpcsv
 RUN go get github.com/everfore/rpcsv/clt
-RUN go build -o clnt ./clt/main.go
+RUN go build -o clt main.go
 
 EXPOSE 80
 
-CMD ["/app/gopath/clnt"]
+CMD ["/app/gopath/clt"]

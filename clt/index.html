@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>markdown</title>
+	<link rel="stylesheet" type="text/css" href="site.css">
+	<script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
+</head>
+<body>
+<h1>Hi,markdown</h1>
+<div class="hv">
+		<textarea id="rawContent" name="rawContent" cols="25" rows="15">{{.RawContent}}</textarea>
+		<label id="markdownContent" style="color:#656565;background-color:#e8edf2;" readonly="true" name="markdownContent" cols="45" rows="15">{{.MarkdownContent}}</label>
+</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#rawContent").keypress( function(event){
+			if ("13"==event.which) {
+				rpcmd();
+				// $(this).val("")
+			};
+		});
+	});
+	function rpcmd () {
+		$.ajax({
+		 url: '/markdown',
+		 type: 'POST',
+		 data:{"rawContent":$("#rawContent").val()},
+		 success: function(result) {
+		  	$("#markdownContent").text(result);
+		 }
+		});
+	}
+</script>
+</body>
+</html>

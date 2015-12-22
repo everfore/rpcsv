@@ -1,0 +1,43 @@
+body{
+	background-color: #eee;
+	margin: 0px;
+	padding: 0px;
+	border-width: 0px;
+}
+p{
+	display: inline;
+}
+#banner{
+	position: fixed;
+	top: 0px;
+	background-color: #8bb;
+	width: 97%;
+	padding: 10px 30px 10px 30px;
+	margin: 0px 0px 0px 0px;
+}
+
+span{
+	padding: 10px 20px 10px 20px;
+}
+
+span:hover{
+	background-color: #599;	
+	color: white;
+}
+
+#footer{
+	position: fixed;
+	background-color: #444;
+	bottom: 0px;
+	width: 98%;
+	margin: 0 auto;
+	font-size: 12;
+	text-align: center;
+	padding: 20px 10px 10px 20px;
+}
+
+.hv{
+	display: inline;
+	margin: 30px auto;
+	padding: 50px;
+}

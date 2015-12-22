@@ -14,7 +14,7 @@ var (
 )
 
 func init() {
-	RPC_Client = rpcsv.RPCClient("182.254.132.59:32769")
+	RPC_Client = rpcsv.RPCClient("182.254.132.59:32770")
 }
 
 func main() {
@@ -33,11 +33,6 @@ func index(rw http.ResponseWriter, req *http.Request) {
 }
 
 func markdown(rw http.ResponseWriter, req *http.Request) {
-	/*tpl, err := template.New("index.html").ParseFiles("index.html")
-	if goutils.CheckErr(err) {
-		return
-	}
-	tpl.Execute(rw, nil)*/
 	req.ParseForm()
 	rawContent := req.Form.Get("rawContent")
 	fmt.Println(rawContent)
@@ -47,6 +42,7 @@ func markdown(rw http.ResponseWriter, req *http.Request) {
 	if goutils.CheckErr(err) {
 		return
 	}
-	mdbs := goutils.ToByte(template.HTMLEscapeString(goutils.ToString(out)))
-	rw.Write(mdbs)
+	rw.Write(out)
+	// mdbs := goutils.ToByte(template.HTMLEscapeString(goutils.ToString(out)))
+	// rw.Write(mdbs)
 }

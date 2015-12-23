@@ -6,8 +6,8 @@ ENV GOPATH /app/gopath
 
 RUN go get github.com/everfore/rpcsv
 RUN go get github.com/everfore/rpcsv/clt
-RUN go build -o clnt main.go
+#RUN go build -o clnt main.go
 
 EXPOSE 80
 
-CMD ["/app/gopath/clt/clnt"]
+CMD ["/app/gopath/bin/clt"]

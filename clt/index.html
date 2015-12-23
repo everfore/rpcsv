@@ -27,20 +27,19 @@
 </div>
 <script type="text/javascript">
 	$(document).ready(function(){
+		rpcmd();
 		$("#rawContent").keypress( function(event){
 			if ("13"==event.which) {
 				rpcmd();
-				// $(this).val("")
 			};
 		});
 	});
 	function rpcmd () {
 		$.ajax({
-		 url: '/markdown',
+		 url: 'http://182.254.132.59/markdown',
 		 type: 'POST',
 		 data:{"rawContent":$("#rawContent").val()},
 		 success: function(result) {
-		  	// $("#markdownContent").text(result);
 		  	$("#markdownContent").html(result);
 		 }
 		});

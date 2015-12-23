@@ -20,7 +20,7 @@ func TestC(t *testing.T) {
 	out := make([]byte, 10)
 
 	// addr, err := net.ResolveTCPAddr("tcp", "127.0.0.1:8800")
-	addr, err := net.ResolveTCPAddr("tcp", "182.254.132.59:32769")
+	addr, err := net.ResolveTCPAddr("tcp", "182.254.132.59:8800")
 	if goutils.CheckErr(err) {
 		return
 	}
@@ -40,7 +40,7 @@ func TestC(t *testing.T) {
 
 func TestRPC(t *testing.T) {
 	// c := RPCClient("127.0.0.1:8800")
-	c := RPCClient("182.254.132.59:32769")
+	c := RPCClient("182.254.132.59:8800")
 	defer c.Close()
 	in := []byte("#   [Hi](http://mdblog.daoapp.io/)")
 	out := make([]byte, 10)

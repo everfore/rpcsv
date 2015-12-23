@@ -31,6 +31,7 @@ func main() {
 func index(rw http.ResponseWriter, req *http.Request) {
 	tpl, err := template.New("index.html").ParseFiles("index.html")
 	if goutils.CheckErr(err) {
+		rw.Write(goutils.ToByte(err.Error()))
 		return
 	}
 	tpl.Execute(rw, nil)
@@ -46,6 +47,7 @@ func markdown(rw http.ResponseWriter, req *http.Request) {
 	defer RPC_Client.Close()
 	err := rpcsv.Markdown(RPC_Client, &in, &out)
 	if goutils.CheckErr(err) {
+		rw.Write(goutils.ToByte(err.Error()))
 		return
 	}
 	rw.Write(out)

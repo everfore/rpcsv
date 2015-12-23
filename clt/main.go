@@ -42,9 +42,10 @@ func markdown(rw http.ResponseWriter, req *http.Request) {
 	fmt.Println(rawContent)
 	out := make([]byte, 10)
 	in := goutils.ToByte(rawContent)
-	if RPC_Client == nil {
-		connect()
-	}
+	// if RPC_Client == nil {
+	connect()
+	defer RPC_Client.Close()
+	// }
 	err := rpcsv.Markdown(RPC_Client, &in, &out)
 	if goutils.CheckErr(err) {
 		return

@@ -14,6 +14,10 @@ var (
 )
 
 func init() {
+	connect()
+}
+
+func connect() {
 	RPC_Client = rpcsv.RPCClient("182.254.132.59:8800")
 }
 
@@ -38,6 +42,9 @@ func markdown(rw http.ResponseWriter, req *http.Request) {
 	fmt.Println(rawContent)
 	out := make([]byte, 10)
 	in := goutils.ToByte(rawContent)
+	if RPC_Client == nil {
+		connect()
+	}
 	err := rpcsv.Markdown(RPC_Client, &in, &out)
 	if goutils.CheckErr(err) {
 		return

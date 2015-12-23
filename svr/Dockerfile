@@ -1,13 +1,13 @@
 FROM golang
 
-ADD . /app/gopath/
+COPY . /app/gopath/
 WORKDIR /app/gopath/svr
 ENV GOPATH /app/gopath
 
 RUN go get github.com/shurcooL/github_flavored_markdown
-RUN go get github.com/everfore/rpcsv
-RUN go build -o rpcsv main.go
+RUN go get github.com/everfore/rpcsv/svr
+#RUN go build -o rpcsv main.go
 
 EXPOSE 8800
 
-CMD ["/app/gopath/svr/rpcsv"]
+CMD ["/app/gopath/bin/svr"]

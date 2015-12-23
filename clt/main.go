@@ -51,7 +51,7 @@ func markdown(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 	if len(out) <= 0 {
-		rw.Write(goutils.ToByte("<h3>nil</h3>"))
+		rw.Write(goutils.ToByte("{response:nil}"))
 	} else {
 		rw.Write(out)
 	}

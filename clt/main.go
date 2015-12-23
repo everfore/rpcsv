@@ -41,7 +41,7 @@ func markdown(rw http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
 	rawContent := req.Form.Get("rawContent")
 	fmt.Println(rawContent)
-	out := make([]byte, 10)
+	out := make([]byte, 0, 100)
 	in := goutils.ToByte(rawContent)
 	connect()
 	defer RPC_Client.Close()
@@ -50,5 +50,9 @@ func markdown(rw http.ResponseWriter, req *http.Request) {
 		rw.Write(goutils.ToByte(err.Error()))
 		return
 	}
-	rw.Write(out)
+	if len(out) <= 0 {
+		rw.Write(goutils.ToByte("<h3>nil</h3>"))
+	} else {
+		rw.Write(out)
+	}
 }

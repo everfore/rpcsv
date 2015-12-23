@@ -14,7 +14,7 @@ var (
 )
 
 func init() {
-	RPC_Client = rpcsv.RPCClient("182.254.132.59:32773")
+	RPC_Client = rpcsv.RPCClient("rpcsvr.daoapp.io:8800")
 }
 
 func main() {

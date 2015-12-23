@@ -14,8 +14,7 @@ var (
 )
 
 func init() {
-	rpcsv.RPCServe("8800")
-	RPC_Client = rpcsv.RPCClient("localhost:8800")
+	RPC_Client = rpcsv.RPCClient("182.254.132.59:8800")
 }
 
 func main() {

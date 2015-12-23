@@ -1,8 +1,8 @@
 FROM golang
 
+COPY . /app/gopath/
 ENV GOPATH /app/gopath
 WORKDIR /app/gopath/clt
-COPY ./clt /app/gopath/clt
 
 RUN go get github.com/everfore/rpcsv
 RUN go get github.com/everfore/rpcsv/clt

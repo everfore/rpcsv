@@ -1,7 +1,7 @@
 FROM golang
 
-COPY . /app/gopath/
-WORKDIR /app/gopath/svr
+COPY ./svr /app/gopath/
+WORKDIR /app/gopath
 ENV GOPATH /app/gopath
 
 RUN go get github.com/shurcooL/github_flavored_markdown
@@ -10,4 +10,4 @@ RUN go build main.go
 
 EXPOSE 8800
 
-CMD ["/app/gopath/svr/svr"]
+CMD ["/app/gopath/svr"]

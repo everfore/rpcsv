@@ -8,7 +8,7 @@ RUN go get github.com/everfore/rpcsv
 WORKDIR /wkdir
 RUN git clone --depth 1 git://github.com/everfore/rpcsv.git .
 WORKDIR /wkdir/svr
-RUN go build main.go
+RUN go build -o svr main.go
 
 EXPOSE 8800
 

@@ -18,8 +18,8 @@ func init() {
 }
 
 func connect() {
-	// RPC_Client = rpcsv.RPCClient("182.254.132.59:8800")
-	RPC_Client = rpcsv.RPCClient("127.0.0.1:8800")
+	RPC_Client = rpcsv.RPCClient("182.254.132.59:8800")
+	// RPC_Client = rpcsv.RPCClient("127.0.0.1:8800")
 	if RPC_Client == nil {
 		panic("nil RPC_Client")
 	}
@@ -78,5 +78,4 @@ func writeCrossDomainHeaders(w http.ResponseWriter, req *http.Request) {
 	}
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
 	w.Header().Set("Connection", "Close")
-
 }

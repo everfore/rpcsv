@@ -40,6 +40,7 @@ func index(rw http.ResponseWriter, req *http.Request) {
 func markdown(rw http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
 	rawContent := req.Form.Get("rawContent")
+	fmt.Println(req.RemoteAddr, req.Referer())
 	fmt.Println(rawContent)
 	out := make([]byte, 0, 100)
 	in := goutils.ToByte(rawContent)

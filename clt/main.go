@@ -56,6 +56,6 @@ func markdown(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 	retBS := goutils.ToByte(fmt.Sprintf("request:%s,response:", rawContent))
-	retBS = append(retBS, out)
+	retBS = append(retBS, out...)
 	rw.Write(retBS)
 }

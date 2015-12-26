@@ -35,7 +35,8 @@
 	});
 	function rpcmd () {
 		$.ajax({
-		 url: 'http://182.254.132.59/markdown',
+		 // url: 'http://182.254.132.59/markdown',
+		 url: 'http://127.0.0.1/markdown',
 		 type: 'POST',
 		 data:{"rawContent":$("#rawContent").val()},
 		 success: function(result) {

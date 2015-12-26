@@ -1,8 +1,10 @@
 FROM golang
 
-ENV GOPATH /app/gopath
 ADD . /wkdir/
+RUN ls
 WORKDIR /wkdir/svr
+RUN ls
+ENV GOPATH /app/gopath
 
 RUN go get github.com/shurcooL/github_flavored_markdown
 RUN go get github.com/everfore/rpcsv

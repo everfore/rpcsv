@@ -1,7 +1,7 @@
 FROM golang
 
-ADD . /wkdir/
-RUN ls
+RUN mkdir /wkdir
+COPY . /wkdir/
 WORKDIR /wkdir/svr
 RUN ls
 ENV GOPATH /app/gopath

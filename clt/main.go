@@ -45,11 +45,9 @@ func markdown(rw http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
 	rawContent := req.Form.Get("rawContent")
 	fmt.Println(req.RemoteAddr, req.Referer())
-	fmt.Println(rawContent)
+	// fmt.Println(rawContent)
 	out := make([]byte, 0, 100)
 	in := goutils.ToByte(rawContent)
-	// connect()
-	// defer RPC_Client.Close()
 	err := rpcsv.Markdown(RPC_Client, &in, &out)
 	if goutils.CheckErr(err) {
 		rw.Write(goutils.ToByte(err.Error()))
@@ -59,7 +57,26 @@ func markdown(rw http.ResponseWriter, req *http.Request) {
 		rw.Write(goutils.ToByte("{response:nil}"))
 		return
 	}
-	retBS := goutils.ToByte(fmt.Sprintf("request:%s,response:", rawContent))
-	retBS = append(retBS, out...)
-	rw.Write(retBS)
+	writeCrossDomainHeaders(rw, req)
+	rw.Write(out)
+}
+
+func writeCrossDomainHeaders(w http.ResponseWriter, req *http.Request) {
+	// Cross domain headers
+	if acrh, ok := req.Header["Access-Control-Request-Headers"]; ok {
+		w.Header().Set("Access-Control-Allow-Headers", acrh[0])
+	}
+	w.Header().Set("Access-Control-Allow-Credentials", "True")
+	if acao, ok := req.Header["Access-Control-Allow-Origin"]; ok {
+		w.Header().Set("Access-Control-Allow-Origin", acao[0])
+	} else {
+		if _, oko := req.Header["Origin"]; oko {
+			w.Header().Set("Access-Control-Allow-Origin", req.Header["Origin"][0])
+		} else {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+		}
+	}
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
+	w.Header().Set("Connection", "Close")
+
 }

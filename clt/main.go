@@ -51,6 +51,7 @@ func markdown(rw http.ResponseWriter, req *http.Request) {
 	err := rpcsv.Markdown(RPC_Client, &in, &out)
 	if goutils.CheckErr(err) {
 		rw.Write(goutils.ToByte(err.Error()))
+		connect()
 		return
 	}
 	if len(out) <= 0 {

@@ -48,10 +48,16 @@ func markdown(rw http.ResponseWriter, req *http.Request) {
 	// fmt.Println(rawContent)
 	out := make([]byte, 0, 100)
 	in := goutils.ToByte(rawContent)
+	times := 0
+retry:
+	times++
 	err := rpcsv.Markdown(RPC_Client, &in, &out)
 	if goutils.CheckErr(err) {
-		rw.Write(goutils.ToByte(err.Error()))
 		connect()
+		if times < 6 {
+			goto retry
+		}
+		rw.Write(goutils.ToByte(err.Error()))
 		return
 	}
 	if len(out) <= 0 {

@@ -33,9 +33,31 @@
 		});
 	});
 	function rpcmd () {
+		function CB(data){
+                console.log(data);
+				$("#markdownContent").html(data);
+		};
+		/*$.getJSON("http://127.0.0.1/markdownCB?callback=callback",{"rawContent":$("#rawContent").val()},function (data){
+                console.log("result-data:"+data.mddata);
+                alert(data);
+				// $("#markdownContent").html(data);
+		});*/
+		/*$.ajax({  
+	        type : "get",  
+	        url : "http://127.0.0.1/markdownCB",  
+	        dataType : "jsonp",//数据类型为jsonp
+	        jsonp: "callback",//服务端用于接收callback调用的function名的参数  
+	        success : function(data){
+	        	console.log(data.mddata);
+	            $("#markdownContent").html(data);
+	        },  
+	        error:function(){  
+	            alert('fail');  
+	        }
+	    });*/
 		$.ajax({
-		 // url: 'http://182.254.132.59/markdown',
-		 url: 'http://127.0.0.1/markdown',
+		 // url: 'http://127.0.0.1/markdown',
+		 url: 'markdown',
 		 type: 'POST',
 		 data:{"rawContent":$("#rawContent").val()},
 		 success: function(result) {
@@ -43,6 +65,11 @@
 		  	console.log(result);
 		 }
 		});
+	}
+</script>
+<script type="text/javascript">
+	function callback (data){
+        return data.mddata;
 	}
 </script>
 </body>

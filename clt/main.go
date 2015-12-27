@@ -29,6 +29,7 @@ func main() {
 	defer RPC_Client.Close()
 	http.HandleFunc("/", index)
 	http.HandleFunc("/markdown", markdown)
+	http.HandleFunc("/markdownCB", markdownCB)
 	http.ListenAndServe(":80", nil)
 }
 
@@ -84,5 +85,39 @@ func writeCrossDomainHeaders(w http.ResponseWriter, req *http.Request) {
 		}
 	}
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
-	w.Header().Set("Connection", "Close")
+	// w.Header().Set("Connection", "Close")
+}
+
+func markdownCB(rw http.ResponseWriter, req *http.Request) {
+	req.ParseForm()
+	rawContent := req.Form.Get("rawContent")
+	fmt.Println(req.RemoteAddr, req.Referer())
+	// fmt.Println(rawContent)
+	out := make([]byte, 0, 100)
+	in := goutils.ToByte(rawContent)
+	times := 0
+retry:
+	times++
+	err := rpcsv.Markdown(RPC_Client, &in, &out)
+	if goutils.CheckErr(err) {
+		connect()
+		if times < 6 {
+			goto retry
+		}
+		rw.Write(goutils.ToByte(err.Error()))
+		return
+	}
+	if len(out) <= 0 {
+		rw.Write(goutils.ToByte("{response:nil}"))
+		return
+	}
+	writeCrossDomainHeaders(rw, req)
+	CB := fmt.Sprintf("callback({\"mddata\" : \"%s\"});", goutils.ToString(out))
+	CB += `<script type="text/javascript">
+	function callback (data){
+        return data.mddata;
+	}
+</script>`
+	rw.Write(goutils.ToByte(CB))
+	// rw.Write(out)
 }

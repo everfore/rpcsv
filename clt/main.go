@@ -7,26 +7,23 @@ import (
 	"html/template"
 	"net/http"
 	"net/rpc"
+	"time"
 )
 
 var (
 	RPC_Client *rpc.Client
 )
 
-func init() {
-	connect()
-}
-
 func connect() {
 	RPC_Client = rpcsv.RPCClient("182.254.132.59:8800")
 	// RPC_Client = rpcsv.RPCClient("127.0.0.1:8800")
-	if RPC_Client == nil {
-		panic("nil RPC_Client")
-	}
+	go func() {
+		time.Sleep(2e9)
+		RPC_Client.Close()
+	}()
 }
 
 func main() {
-	defer RPC_Client.Close()
 	http.HandleFunc("/", index)
 	http.HandleFunc("/markdown", markdown)
 	http.HandleFunc("/markdownCB", markdownCB)
@@ -50,6 +47,7 @@ func markdown(rw http.ResponseWriter, req *http.Request) {
 	out := make([]byte, 0, 100)
 	in := goutils.ToByte(rawContent)
 	times := 0
+	connect()
 retry:
 	times++
 	err := rpcsv.Markdown(RPC_Client, &in, &out)

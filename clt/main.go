@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/everfore/rpcsv"
 	"github.com/shaalx/goutils"
@@ -93,15 +94,9 @@ func markdownCB(rw http.ResponseWriter, req *http.Request) {
 	// fmt.Println(rawContent)
 	out := make([]byte, 0, 100)
 	in := goutils.ToByte(rawContent)
-	times := 0
-retry:
-	times++
+	RPC_Client = rpcsv.RPCClient("182.254.132.59:8800")
 	err := rpcsv.Markdown(RPC_Client, &in, &out)
 	if goutils.CheckErr(err) {
-		connect()
-		if times < 6 {
-			goto retry
-		}
 		rw.Write(goutils.ToByte(err.Error()))
 		return
 	}
@@ -110,12 +105,19 @@ retry:
 		return
 	}
 	writeCrossDomainHeaders(rw, req)
-	CB := fmt.Sprintf("callback({\"mddata\" : \"%s\"});", goutils.ToString(out))
-	CB += `<script type="text/javascript">
-	function callback (data){
-        return data.mddata;
+	fmt.Println(req.RemoteAddr)
+	CallbackFunc := fmt.Sprintf("CallbackFunc(%v);", string(Json(goutils.ToString(out))))
+	fmt.Fprint(rw, CallbackFunc)
+}
+
+type CallbackData struct {
+	Mddata interface{} `json:"mddata"`
+}
+
+func Json(data interface{}) []byte {
+	bs, err := json.Marshal(CallbackData{Mddata: data})
+	if goutils.CheckErr(err) {
+		return nil
 	}
-</script>`
-	rw.Write(goutils.ToByte(CB))
-	// rw.Write(out)
+	return bs
 }

@@ -25,7 +25,6 @@
 		<div class="content">
 			<div>
 				<textarea  class="form-control" id="rawContent" name="rawContent" rows="25">{{.RawContent}}</textarea>
-				<input type="button" onclick="rpcmd()" value="jsonp">
 			</div>
 		</div>
 	</div>
@@ -33,7 +32,6 @@
 		<span id="markdownContent" name="markdownContent">{{.MarkdownContent}}</span>
 	</div>
 </div>
-<script type="text/javascript" src="http://localhost:80/markdownCB"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
 		$("#rawContent").keypress( function(event){

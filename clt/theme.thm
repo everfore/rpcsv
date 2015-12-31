@@ -1,4 +1,3 @@
-<span style="display:inline"><h1>Merry Xmas</h1></span>
 <span style="display:inline"><h6>@ client</h6></span>
 <hr>
 {{.MDContent}}

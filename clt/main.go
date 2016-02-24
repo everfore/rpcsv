@@ -12,12 +12,12 @@ import (
 )
 
 var (
-	RPC_Client *rpc.Client
+	RPC_Client     *rpc.Client
+	rpc_tcp_server = "tcphub.t0.daoapp.io:61142"
 )
 
 func connect() {
-	RPC_Client = rpcsv.RPCClient("182.254.132.59:8800")
-	// RPC_Client = rpcsv.RPCClient("127.0.0.1:8800")
+	RPC_Client = rpcsv.RPCClient(rpc_tcp_server)
 	go func() {
 		time.Sleep(2e9)
 		RPC_Client.Close()
@@ -94,7 +94,7 @@ func markdownCB(rw http.ResponseWriter, req *http.Request) {
 	// fmt.Println(rawContent)
 	out := make([]byte, 0, 100)
 	in := goutils.ToByte(rawContent)
-	RPC_Client = rpcsv.RPCClient("182.254.132.59:8800")
+	RPC_Client = rpcsv.RPCClient(rpc_tcp_server)
 	err := rpcsv.Markdown(RPC_Client, &in, &out)
 	if goutils.CheckErr(err) {
 		rw.Write(goutils.ToByte(err.Error()))

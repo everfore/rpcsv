@@ -47,7 +47,7 @@
 		$("#markdownContent").html(data.mddata);
 	}
 	function rpcmd () {
-		$.getJSON("http://localhost:80/markdownCB?callback=?",{"rawContent":$("#rawContent").val()},function (data){
+		$.getJSON("http://markdown.daoapp.io/markdownCB?callback=?",{"rawContent":$("#rawContent").val()},function (data){
 	        console.log(" is a a" + data.mddata);
 	    });
 		/*$.ajax({  

@@ -10,7 +10,8 @@ import (
 )
 
 var (
-	lis net.Listener
+	lis            net.Listener
+	rpc_tcp_server = "tcphub.t0.daoapp.io:61142"
 )
 
 func init() {
@@ -22,7 +23,8 @@ func TestC(t *testing.T) {
 	in := []byte("#   [Hello](http://mdblog.daoapp.io/)")
 	out := make([]byte, 10)
 
-	addr, err := net.ResolveTCPAddr("tcp", "127.0.0.1:8800")
+	addr, err := net.ResolveTCPAddr("tcp", rpc_tcp_server)
+	// addr, err := net.ResolveTCPAddr("tcp", "127.0.0.1:8800")
 	if goutils.CheckErr(err) {
 		return
 	}
@@ -41,8 +43,8 @@ func TestC(t *testing.T) {
 }
 
 func TestRPC(t *testing.T) {
-	// c := RPCClient("127.0.0.1:8800")
-	c := RPCClientWithCodec("127.0.0.1:8800")
+	c := RPCClientWithCodec(rpc_tcp_server)
+	// c := RPCClientWithCodec("127.0.0.1:8800")
 	defer c.Close()
 	in := []byte("#   [Hi](http://mdblog.daoapp.io/)")
 	out := make([]byte, 10)
@@ -52,8 +54,8 @@ func TestRPC(t *testing.T) {
 }
 
 func TestJob(t *testing.T) {
-	// c := RPCClient("127.0.0.1:8800")
-	c := RPCClientWithCodec("127.0.0.1:8800")
+	c := RPCClientWithCodec(rpc_tcp_server)
+	// c := RPCClientWithCodec("127.0.0.1:8800")
 	defer c.Close()
 	in, _ := json.Marshal(Job{Name: "baidu", Target: "https://baidu.com"})
 	out := make([]byte, 10)
@@ -65,8 +67,8 @@ func TestJob(t *testing.T) {
 
 func TestWall(t *testing.T) {
 	return
-	// c := RPCClient("127.0.0.1:8800")
-	c := RPCClientWithCodec("127.0.0.1:8800")
+	c := RPCClientWithCodec(rpc_tcp_server)
+	// c := RPCClientWithCodec("127.0.0.1:8800")
 	defer c.Close()
 	out := make([]byte, 10)
 	in := make([]byte, 1)

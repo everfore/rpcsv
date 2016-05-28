@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/shaalx/goutils"
 	"net"
-	// "net/rpc"
+	"net/rpc"
 	"testing"
 )
 
@@ -18,40 +18,34 @@ func init() {
 }
 
 func TestC(t *testing.T) {
-	// return
-	// in := []byte("#   [Hello](http://mdblog.daoapp.io/)")
-	// out := make([]byte, 10)
+	in := []byte("#   [Hello](http://mdblog.daoapp.io/)")
+	out := make([]byte, 10)
 
-	// addr, err := net.ResolveTCPAddr("tcp", "127.0.0.1:8800")
-	// // addr, err := net.ResolveTCPAddr("tcp", "182.254.132.59:8800")
-	// if goutils.CheckErr(err) {
-	// 	return
-	// }
-	// conn, err := net.DialTCP("tcp", nil, addr)
-	// defer conn.Close()
-	// if goutils.CheckErr(err) {
-	// 	return
-	// }
+	addr, err := net.ResolveTCPAddr("tcp", "127.0.0.1:8800")
+	if goutils.CheckErr(err) {
+		return
+	}
+	conn, err := net.DialTCP("tcp", nil, addr)
+	defer conn.Close()
+	if goutils.CheckErr(err) {
+		return
+	}
 
-	// rc := rpc.NewClient(conn)
-	// err = rc.Call("RPC.Markdown", &in, &out)
-	// if goutils.CheckErr(err) {
-	// 	return
-	// }
-	// fmt.Println(string(out))
+	rc := rpc.NewClient(conn)
+	err = rc.Call("RPC.Markdown", &in, &out)
+	if goutils.CheckErr(err) {
+		return
+	}
+	fmt.Println(string(out))
 }
 
 func TestRPC(t *testing.T) {
-	fmt.Println("...TestRPC")
-	c := RPCClient("127.0.0.1:8800")
-	// c := RPCClientWithCodec("127.0.0.1:8800")
-	fmt.Println(c)
+	// c := RPCClient("127.0.0.1:8800")
+	c := RPCClientWithCodec("127.0.0.1:8800")
 	defer c.Close()
 	in := []byte("#   [Hi](http://mdblog.daoapp.io/)")
 	out := make([]byte, 10)
-	fmt.Println("start call markdown")
 	Markdown(c, &in, &out)
-	fmt.Println("end call markdown")
 	fmt.Println(goutils.ToString(out))
 	// defer lis.Close()
 }

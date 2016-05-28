@@ -17,7 +17,7 @@ var (
 )
 
 func connect() {
-	RPC_Client = rpcsv.RPCClient(rpc_tcp_server)
+	RPC_Client = rpcsv.RPCClientWithCodec(rpc_tcp_server)
 	go func() {
 		time.Sleep(2e9)
 		RPC_Client.Close()

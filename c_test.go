@@ -1,6 +1,7 @@
 package rpcsv
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/shaalx/goutils"
 	"net"
@@ -48,4 +49,28 @@ func TestRPC(t *testing.T) {
 	Markdown(c, &in, &out)
 	fmt.Println(goutils.ToString(out))
 	// defer lis.Close()
+}
+
+func TestJob(t *testing.T) {
+	// c := RPCClient("127.0.0.1:8800")
+	c := RPCClientWithCodec("127.0.0.1:8800")
+	defer c.Close()
+	in, _ := json.Marshal(Job{Name: "baidu", Target: "https://baidu.com"})
+	out := make([]byte, 10)
+	err := c.Call("RPC.Job", &in, &out)
+	goutils.CheckErr(err)
+	fmt.Println(goutils.ToString(in))
+	fmt.Println(goutils.ToString(out))
+}
+
+func TestWall(t *testing.T) {
+	return
+	// c := RPCClient("127.0.0.1:8800")
+	c := RPCClientWithCodec("127.0.0.1:8800")
+	defer c.Close()
+	out := make([]byte, 10)
+	in := make([]byte, 1)
+	err := c.Call("RPC.Wall", &in, &out)
+	goutils.CheckErr(err)
+	fmt.Println("out:", goutils.ToString(out))
 }

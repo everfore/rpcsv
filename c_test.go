@@ -57,7 +57,7 @@ func TestJob(t *testing.T) {
 	c := RPCClientWithCodec(rpc_tcp_server)
 	// c := RPCClientWithCodec("127.0.0.1:8800")
 	defer c.Close()
-	in, _ := json.Marshal(Job{Name: "baidu", Target: "https://baidu.com"})
+	in, _ := json.Marshal(Job{Name: "google", Target: "https://www.google.com/search?q=golang&oq=golang&aqs=chrome..69i57j69i60l4.1517j0j4&sourceid=chrome&ie=UTF-8"})
 	out := make([]byte, 10)
 	err := c.Call("RPC.Job", &in, &out)
 	goutils.CheckErr(err)

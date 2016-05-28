@@ -52,7 +52,7 @@ func (r *RPC) Job(in, out *([]byte)) error {
 	}
 	r.jobs[job.Name] = job
 	*out = goutils.ToByte("taken")
-	fmt.Println(r.jobs)
+	fmt.Println("Jobs,", r.jobs)
 	return nil
 }
 
@@ -74,5 +74,7 @@ func (r *RPC) Wall(in, out *([]byte)) error {
 		return err
 	}
 	*out = b
+	fmt.Println("Wall-Job,", job)
+	fmt.Println("Now-Jobs,", r.jobs)
 	return nil
 }

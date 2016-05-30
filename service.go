@@ -7,7 +7,7 @@ import (
 	// "bytes"
 	"fmt"
 	// "bufio"
-	"encoding/json"
+	// "encoding/json"
 	"html/template"
 	"os"
 	"sync"
@@ -73,9 +73,9 @@ func (r *RPC) Job(job *Job, out *([]byte)) error {
 }
 
 // get a job randomly
-func (r *RPC) Wall(in, out *([]byte)) error {
+func (r *RPC) Wall(in *([]byte), out *Job) error {
 	if r.jobs == nil || len(r.jobs) < 1 {
-		*out = goutils.ToByte("nil")
+		out = nil
 		return fmt.Errorf("nil")
 	}
 	job := Job{}
@@ -86,13 +86,7 @@ func (r *RPC) Wall(in, out *([]byte)) error {
 		delete(r.jobs, job.Name)
 		break
 	}
-	/*buf := bytes.NewBuffer(*out)
-	err := json.NewEncoder(&buf).Encode(job)*/
-	b, err := json.Marshal(job)
-	if goutils.CheckErr(err) {
-		return err
-	}
-	*out = b
+	*out = job
 	fmt.Println("Wall-Job,", job)
 	fmt.Println("Now-Jobs,", r.jobs)
 	return nil

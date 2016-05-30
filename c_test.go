@@ -24,8 +24,8 @@ func TestC(t *testing.T) {
 	in := []byte("#   [Hello](http://mdblog.daoapp.io/)")
 	out := make([]byte, 10)
 
-	addr, err := net.ResolveTCPAddr("tcp", rpc_tcp_server)
-	// addr, err := net.ResolveTCPAddr("tcp", "127.0.0.1:8800")
+	// addr, err := net.ResolveTCPAddr("tcp", rpc_tcp_server)
+	addr, err := net.ResolveTCPAddr("tcp", "127.0.0.1:8800")
 	if goutils.CheckErr(err) {
 		return
 	}
@@ -45,8 +45,8 @@ func TestC(t *testing.T) {
 
 func TestRPC(t *testing.T) {
 	t.Parallel()
-	c := RPCClientWithCodec(rpc_tcp_server)
-	// c := RPCClientWithCodec("127.0.0.1:8800")
+	// c := RPCClientWithCodec(rpc_tcp_server)
+	c := RPCClientWithCodec("127.0.0.1:8800")
 	defer c.Close()
 	in := []byte("#   [Hi](http://mdblog.daoapp.io/)")
 	out := make([]byte, 10)
@@ -58,11 +58,11 @@ func TestRPC(t *testing.T) {
 func TestJob(t *testing.T) {
 	t.Parallel()
 	// return
-	c := RPCClientWithCodec(rpc_tcp_server)
-	// c := RPCClientWithCodec("127.0.0.1:8800")
+	// c := RPCClientWithCodec(rpc_tcp_server)
+	c := RPCClientWithCodec("127.0.0.1:8800")
 	defer c.Close()
 	// in, _ := json.Marshal(Job{Name: "google", Target: "https://www.google.com/search?q=golang&oq=golang&aqs=chrome..69i57j69i60l4.1517j0j4&sourceid=chrome&ie=UTF-8"})
-	in := Job{Name: "google", Target: "https://www.google.com/search?q=golang&oq=golang&aqs=chrome..69i57j69i60l4.1517j0j4&sourceid=chrome&ie=UTF-8"}
+	in := Job{Name: "mdblog", Target: "http://mdblog.daoapp.io"}
 	out := make([]byte, 10)
 	err := c.Call("RPC.Job", &in, &out)
 	goutils.CheckErr(err)
@@ -73,21 +73,21 @@ func TestJob(t *testing.T) {
 func TestWall(t *testing.T) {
 	t.Parallel()
 	return
-	c := RPCClientWithCodec(rpc_tcp_server)
-	// c := RPCClientWithCodec("127.0.0.1:8800")
+	// c := RPCClientWithCodec(rpc_tcp_server)
+	c := RPCClientWithCodec("127.0.0.1:8800")
 	defer c.Close()
-	out := make([]byte, 10)
+	out := Job{}
 	in := make([]byte, 1)
 	err := c.Call("RPC.Wall", &in, &out)
 	goutils.CheckErr(err)
-	fmt.Println("out:", goutils.ToString(out))
+	fmt.Println("out:", out)
 }
 
 func TestWallBack(t *testing.T) {
 	t.Parallel()
-	// return
-	c := RPCClientWithCodec(rpc_tcp_server)
-	// c := RPCClientWithCodec("127.0.0.1:8800")
+	return
+	// c := RPCClientWithCodec(rpc_tcp_server)
+	c := RPCClientWithCodec("127.0.0.1:8800")
 	defer c.Close()
 	job := Job{Name: "google", Result: goutils.ToByte("google-result")}
 	out := make([]byte, 10)

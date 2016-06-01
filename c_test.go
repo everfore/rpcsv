@@ -12,6 +12,7 @@ import (
 var (
 	lis            net.Listener
 	rpc_tcp_server = "tcphub.t0.daoapp.io:61142"
+	// rpc_tcp_server = "127.0.0.1:8800"
 )
 
 func init() {
@@ -20,12 +21,12 @@ func init() {
 }
 
 func TestC(t *testing.T) {
+	return
 	t.Parallel()
 	in := []byte("#   [Hello](http://mdblog.daoapp.io/)")
 	out := make([]byte, 10)
 
-	// addr, err := net.ResolveTCPAddr("tcp", rpc_tcp_server)
-	addr, err := net.ResolveTCPAddr("tcp", "127.0.0.1:8800")
+	addr, err := net.ResolveTCPAddr("tcp", rpc_tcp_server)
 	if goutils.CheckErr(err) {
 		return
 	}
@@ -44,9 +45,9 @@ func TestC(t *testing.T) {
 }
 
 func TestRPC(t *testing.T) {
+	return
 	t.Parallel()
-	// c := RPCClientWithCodec(rpc_tcp_server)
-	c := RPCClientWithCodec("127.0.0.1:8800")
+	c := RPCClientWithCodec(rpc_tcp_server)
 	defer c.Close()
 	in := []byte("#   [Hi](http://mdblog.daoapp.io/)")
 	out := make([]byte, 10)
@@ -58,10 +59,10 @@ func TestRPC(t *testing.T) {
 func TestJob(t *testing.T) {
 	t.Parallel()
 	// return
-	// c := RPCClientWithCodec(rpc_tcp_server)
-	c := RPCClientWithCodec("127.0.0.1:8800")
+	c := RPCClientWithCodec(rpc_tcp_server)
 	defer c.Close()
-	// in, _ := json.Marshal(Job{Name: "google", Target: "https://www.google.com/search?q=golang&oq=golang&aqs=chrome..69i57j69i60l4.1517j0j4&sourceid=chrome&ie=UTF-8"})
+	// in := Job{Name: "google", Target: "https://www.google.com/search?q=docker&oq=docker&aqs=chrome..69i57j69i60l4.1517j0j4&sourceid=chrome&ie=UTF-8"}
+	// in := Job{Name: "docker", Target: "https://www.google.com/aclk?sa=l&ai=Cls_gs3pMV8qDGcuq9gWdmIDoBprG9PcJgp_wutwC7MbsFAgAEAFgibPGhPQToAG8ppTsA8gBAaoEJk_QWc_UQjNHKe39e-t7guvDvFwTnmO55c8m1AmJHWa40wgOFtPpgAes2esTkAcBqAemvhvYBwE&sig=AOD64_1CJPrrkYMy7tE2O8DDMb1KMt8GuQ&clui=0&ved=0ahUKEwiagI7aq4LNAhXhnaYKHX5UDeQQ0QwIEg&adurl=https://circleci.com/integrations/docker/"}
 	in := Job{Name: "mdblog", Target: "http://mdblog.daoapp.io"}
 	out := make([]byte, 10)
 	err := c.Call("RPC.Job", &in, &out)
@@ -71,10 +72,9 @@ func TestJob(t *testing.T) {
 }
 
 func TestWall(t *testing.T) {
-	t.Parallel()
 	return
-	// c := RPCClientWithCodec(rpc_tcp_server)
-	c := RPCClientWithCodec("127.0.0.1:8800")
+	t.Parallel()
+	c := RPCClientWithCodec(rpc_tcp_server)
 	defer c.Close()
 	out := Job{}
 	in := make([]byte, 1)
@@ -84,12 +84,11 @@ func TestWall(t *testing.T) {
 }
 
 func TestWallBack(t *testing.T) {
+	// return
 	t.Parallel()
-	return
-	// c := RPCClientWithCodec(rpc_tcp_server)
-	c := RPCClientWithCodec("127.0.0.1:8800")
+	c := RPCClientWithCodec(rpc_tcp_server)
 	defer c.Close()
-	job := Job{Name: "google", Result: goutils.ToByte("google-result")}
+	job := Job{Name: "mdblog", Result: goutils.ToByte("mdblog-result")}
 	out := make([]byte, 10)
 	// in := make([]byte, 1)
 	err := c.Call("RPC.WallBack", &job, &out)

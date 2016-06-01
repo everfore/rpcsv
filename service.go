@@ -60,9 +60,11 @@ func (r *RPC) Job(job *Job, out *([]byte)) error {
 	if !ok {
 		r.back[job.Name] = make(chan []byte)
 	}
+
+	fmt.Printf("jobs <- [%s]\n", job.Name)
+	stateJobs(r.jobs)
 	r.Unlock()
 
-	fmt.Println("Jobs,", r.jobs)
 	select {
 	case <-time.After(5e9):
 		*out = goutils.ToByte(fmt.Sprintf("Job %s Timeout!!", job.Name))
@@ -87,8 +89,8 @@ func (r *RPC) Wall(in *([]byte), out *Job) error {
 		break
 	}
 	*out = job
-	fmt.Println("Wall-Job,", job)
-	fmt.Println("Now-Jobs,", r.jobs)
+	fmt.Printf("jobs --> [%s]\n", job.Name)
+	stateJobs(r.jobs)
 	return nil
 }
 
@@ -107,4 +109,12 @@ func (r *RPC) WallBack(in *Job, out *([]byte)) error {
 		}
 	}
 	return nil
+}
+
+func stateJobs(jobs map[string]Job) {
+	fmt.Printf("Jobs: %d\n[", len(jobs))
+	for k, _ := range jobs {
+		fmt.Printf("\t%s\n", k)
+	}
+	fmt.Println("\n]")
 }

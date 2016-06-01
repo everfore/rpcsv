@@ -72,11 +72,11 @@ func RPCServeWithCode(port string) (net.Listener, error) {
 					enc:    gob.NewEncoder(buf),
 					encBuf: buf,
 				}
+				defer srv.Close()
 				err = rpc.ServeRequest(srv)
 				if err != nil {
 					fmt.Println("Error: server rpc request", err.Error())
 				}
-				srv.Close()
 			}(conn)
 		}
 	}()

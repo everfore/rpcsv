@@ -129,7 +129,7 @@ func (r *RPC) WallBack(in *Job, out *([]byte)) error {
 		select {
 		case <-time.After(5e9):
 			*out = goutils.ToByte(fmt.Sprintf("WallBack %s Timeout!!", in.Name))
-			// fmt.Println(<-c)
+			fmt.Println(fmt.Sprintf("WallBack %s Timeout!!", in.Name))
 			break
 		case c <- in.Result:
 			fmt.Println(fmt.Sprintf("WallBack %s[%s]", in.Name, in.Target))

@@ -85,7 +85,7 @@ func TestWall(t *testing.T) {
 }
 
 func TestWallBack(t *testing.T) {
-	return
+	// return
 	t.Parallel()
 	c := RPCClientWithCodec(rpc_tcp_server)
 	defer c.Close()

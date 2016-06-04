@@ -46,6 +46,27 @@ func (r *RPC) Markdown(in, out *([]byte)) error {
 }
 
 // jobs of curling the page
+func (r *RPC) JustJob(job *Job, out *([]byte)) error {
+	r.Lock()
+	defer r.Unlock()
+	if nil == r.jobs {
+		r.jobs = make(map[string]Job)
+	}
+	r.jobs[job.Name] = *job
+	if nil == r.back {
+		r.back = make(map[string]chan []byte)
+	}
+	_, ok := r.back[job.Name]
+	if !ok {
+		r.back[job.Name] = make(chan []byte)
+	}
+
+	fmt.Printf("jobs <- [%s]\n", job.Name)
+	stateJobs(r.jobs)
+	return nil
+}
+
+// jobs of curling the page
 func (r *RPC) Job(job *Job, out *([]byte)) error {
 	r.Lock()
 	// defer r.Unlock()
@@ -70,15 +91,20 @@ func (r *RPC) Job(job *Job, out *([]byte)) error {
 		*out = goutils.ToByte(fmt.Sprintf("Job %s[%s] Timeout!!", job.Name, job.Target))
 		break
 	case *out = <-r.back[job.Name]:
+		break
 	}
 	return nil
 }
+
+var (
+	NO_JOB = fmt.Errorf("nil-job")
+)
 
 // get a job randomly
 func (r *RPC) Wall(in *([]byte), out *Job) error {
 	if r.jobs == nil || len(r.jobs) < 1 {
 		out = nil
-		return fmt.Errorf("nil")
+		return NO_JOB
 	}
 	job := Job{}
 	r.Lock()
@@ -112,9 +138,9 @@ func (r *RPC) WallBack(in *Job, out *([]byte)) error {
 }
 
 func stateJobs(jobs map[string]Job) {
-	fmt.Printf("Jobs: %d\n[", len(jobs))
+	fmt.Printf("Jobs: [%d]:{ ", len(jobs))
 	for k, _ := range jobs {
-		fmt.Printf("\t%s\n", k)
+		fmt.Printf("%s, ", k)
 	}
-	fmt.Println("\n]")
+	fmt.Println(" }")
 }

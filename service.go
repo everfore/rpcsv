@@ -71,6 +71,7 @@ func (r *RPC) JustJob(job *Job, out *([]byte)) error {
 该方法已经暂时停用，留给僵尸进程；新任务请调用AJob
 */
 func (r *RPC) Job(job *Job, out *([]byte)) error {
+	return nil
 	r.Lock()
 	// defer r.Unlock()
 	if nil == r.jobs {

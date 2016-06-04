@@ -66,7 +66,7 @@ func (r *RPC) Job(job *Job, out *([]byte)) error {
 	r.Unlock()
 
 	select {
-	case <-time.After(5e9):
+	case <-time.After(7e9):
 		*out = goutils.ToByte(fmt.Sprintf("Job %s[%s] Timeout!!", job.Name, job.Target))
 		break
 	case *out = <-r.back[job.Name]:

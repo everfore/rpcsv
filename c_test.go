@@ -66,7 +66,7 @@ func TestJob(t *testing.T) {
 	// in := Job{Name: "jenkins2", Target: "https://jenkins.io/solutions/docker/"}
 	// in := Job{Name: "jenkins-docker", Target: "https://youtu.be/ppCzDDpcqRk"}
 	out := make([]byte, 10)
-	err := c.Call("RPC.Job", &in, &out)
+	err := c.Call("RPC.AJob", &in, &out)
 	goutils.CheckErr(err)
 	fmt.Println(in)
 	fmt.Println(goutils.ToString(out))

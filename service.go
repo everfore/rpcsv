@@ -67,7 +67,40 @@ func (r *RPC) JustJob(job *Job, out *([]byte)) error {
 }
 
 // jobs of curling the page
+/**
+该方法已经暂时停用，留给僵尸进程；新任务请调用AJob
+*/
 func (r *RPC) Job(job *Job, out *([]byte)) error {
+	r.Lock()
+	// defer r.Unlock()
+	if nil == r.jobs {
+		r.jobs = make(map[string]Job)
+	}
+	r.jobs[job.Name] = *job
+	if nil == r.back {
+		r.back = make(map[string]chan []byte)
+	}
+	_, ok := r.back[job.Name]
+	if !ok {
+		r.back[job.Name] = make(chan []byte)
+	}
+
+	fmt.Printf("jobs <- [%s]\n", job.Name)
+	stateJobs(r.jobs)
+	r.Unlock()
+
+	select {
+	case <-time.After(5e9):
+		// *out = goutils.ToByte(fmt.Sprintf("Job %s[%s] Timeout!!", job.Name, job.Target))
+		return fmt.Errorf("Job %s[%s] Timeout!!", job.Name, job.Target)
+	case *out = <-r.back[job.Name]:
+		break
+	}
+	return nil
+}
+
+// jobs of curling the page
+func (r *RPC) AJob(job *Job, out *([]byte)) error {
 	r.Lock()
 	// defer r.Unlock()
 	if nil == r.jobs {

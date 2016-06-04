@@ -132,6 +132,7 @@ func (r *RPC) WallBack(in *Job, out *([]byte)) error {
 			// fmt.Println(<-c)
 			break
 		case c <- in.Result:
+			fmt.Println(fmt.Sprintf("WallBack %s[%s]", in.Name, in.Target))
 		}
 	}
 	return nil

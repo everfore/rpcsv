@@ -56,7 +56,7 @@ func TestRPC(t *testing.T) {
 	// defer lis.Close()
 }
 
-func TestJob(t *testing.T) {
+func TestAJob(t *testing.T) {
 	t.Parallel()
 	// return
 	c := RPCClientWithCodec(rpc_tcp_server)

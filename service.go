@@ -16,9 +16,10 @@ import (
 )
 
 type Job struct {
-	Name   string
-	Target string
-	Result []byte
+	Name          string
+	Target        string
+	Result        []byte
+	TargetContent string
 }
 
 type RPC struct {

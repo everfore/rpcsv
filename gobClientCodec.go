@@ -3,7 +3,7 @@ package rpcsv
 import (
 	"bufio"
 	"encoding/gob"
-	"github.com/shaalx/goutils"
+	"github.com/toukii/goutils"
 	"io"
 	"net"
 	"net/rpc"

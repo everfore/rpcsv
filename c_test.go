@@ -3,7 +3,7 @@ package rpcsv
 import (
 	// "encoding/json"
 	"fmt"
-	"github.com/shaalx/goutils"
+	"github.com/toukii/goutils"
 	"net"
 	"net/rpc"
 	"testing"

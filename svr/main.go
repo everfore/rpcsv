@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/everfore/rpcsv"
-	"github.com/shaalx/goutils"
+	"github.com/toukii/goutils"
 )
 
 func main() {

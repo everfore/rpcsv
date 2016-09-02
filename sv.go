@@ -1,7 +1,7 @@
 package rpcsv
 
 import (
-	"github.com/shaalx/goutils"
+	"github.com/toukii/goutils"
 	"net"
 	"net/rpc"
 

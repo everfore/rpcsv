@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"encoding/gob"
 	"fmt"
-	"github.com/shaalx/goutils"
+	"github.com/toukii/goutils"
 	"io"
 	"net"
 	"net/rpc"

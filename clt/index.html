@@ -47,7 +47,7 @@
 		$("#markdownContent").html(data.mddata);
 	}
 	function rpcmd () {
-		$.getJSON("http://markdown.daoapp.io/markdownCB?callback=?",{"rawContent":$("#rawContent").val()},function (data){
+		/*$.getJSON("http://markdown.daoapp.io/markdownCB?callback=?",{"rawContent":$("#rawContent").val()},function (data){
 	        console.log(" is a a" + data.mddata);
 	    });
 		/*$.ajax({  
@@ -65,7 +65,7 @@
 	            alert('fail');  
 	        }
 	    });*/
-		/*$.ajax({
+		$.ajax({
 		 // url: 'http://localhost:80/markdown',
 		 url: 'markdown',
 		 type: 'POST',
@@ -74,7 +74,7 @@
 		  	$("#markdownContent").html(result);
 		  	// console.log(result);
 		 }
-		});*/
+		});
 	}
 </script>
 </body>

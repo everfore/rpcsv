@@ -13,7 +13,8 @@ import (
 
 var (
 	RPC_Client     *rpc.Client
-	rpc_tcp_server = "tcphub.t0.daoapp.io:61142"
+	// rpc_tcp_server = "tcphub.t0.daoapp.io:61142"
+	rpc_tcp_server = "127.0.0.1:8800"
 )
 
 func connect() {

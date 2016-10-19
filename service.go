@@ -4,12 +4,12 @@ import (
 	"github.com/toukii/goutils"
 	md "github.com/shurcooL/github_flavored_markdown"
 
-	// "bytes"
+	"bytes"
 	"fmt"
-	// "bufio"
+	"bufio"
 	// "encoding/json"
 	"html/template"
-	"os"
+	// "os"
 	"sync"
 	"time"
 	// "strings"
@@ -29,20 +29,34 @@ type RPC struct {
 }
 
 func (r *RPC) Markdown(in, out *([]byte)) error {
-	// fmt.Println(goutils.ToString(*in))
+	fmt.Println(goutils.ToString(*in))
 	html := md.Markdown(*in)
+	fmt.Println("Markdown:",goutils.ToString(html))
 	goutils.ReWriteFile("tempory.tmp", nil)
-	of, _ := os.OpenFile("tempory.tmp", os.O_CREATE|os.O_WRONLY, 0666)
-	defer of.Close()
+	// of, _ := os.OpenFile("tempory.tmp", os.O_CREATE|os.O_WRONLY, 0666)
+	// defer of.Close()
 	data := make(map[string]interface{})
 	data["MDContent"] = template.HTML(goutils.ToString(html))
-	err := theme.Execute(of, data)
+	md_theme_bs:=goutils.ToByte("{{.MDContent}}")
+	buf:=make([]byte,1024)
+	buf = append(md_theme_bs,buf...)
+	bufW:=bytes.NewBuffer(buf)
+	wrtr:=bufio.NewWriter(bufW)
+	err := theme.Execute(wrtr, data)
+	// err := theme.Execute(of, data)
 	if goutils.CheckErr(err) {
 		return err
 	}
-	*out = goutils.ReadFile("tempory.tmp")
-	// fmt.Println(goutils.ToString(html))
+	// fmt.Println("Buffered ",wrtr.Buffered(),wrtr.Available(),wrtr.WriteByte(13))
+	wrtr.Flush()
+	// *out = buf
+	bufR:=bytes.NewReader(buf)
+	b,err:=bufR.ReadByte()
+	fmt.Println("read from buf:",b,err)
+	// *out = goutils.ReadFile("tempory.tmp")
+	
 	// fmt.Println("out:", goutils.ToString(*out))
+	fmt.Println("buf:",buf,"[bufStr]",goutils.ToString(buf))
 	return nil
 }
 

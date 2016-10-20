@@ -25,7 +25,7 @@ func connect() {
 }
 
 func init()  {
-	rpcsv.UpdataTheme()
+	// rpcsv.UpdataTheme()
 }
 
 func main() {

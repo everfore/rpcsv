@@ -8,8 +8,8 @@ import (
 	"fmt"
 	// "bufio"
 	// "encoding/json"
-	"html/template"
-	"os"
+	// "html/template"
+	// "os"
 	"sync"
 	"time"
 	// "strings"
@@ -31,16 +31,17 @@ type RPC struct {
 func (r *RPC) Markdown(in, out *([]byte)) error {
 	// fmt.Println(goutils.ToString(*in))
 	html := md.Markdown(*in)
-	goutils.ReWriteFile("tempory.tmp", nil)
-	of, _ := os.OpenFile("tempory.tmp", os.O_CREATE|os.O_WRONLY, 0666)
-	defer of.Close()
-	data := make(map[string]interface{})
-	data["MDContent"] = template.HTML(goutils.ToString(html))
-	err := theme.Execute(of, data)
-	if goutils.CheckErr(err) {
-		return err
-	}
-	*out = goutils.ReadFile("tempory.tmp")
+	*out = html
+	// goutils.ReWriteFile("tempory.tmp", nil)
+	// of, _ := os.OpenFile("tempory.tmp", os.O_CREATE|os.O_WRONLY, 0666)
+	// defer of.Close()
+	// data := make(map[string]interface{})
+	// data["MDContent"] = template.HTML(goutils.ToString(html))
+	// err := Theme.Execute(of, data)
+	// if goutils.CheckErr(err) {
+	// 	return err
+	// }
+	// *out = goutils.ReadFile("tempory.tmp")
 	// fmt.Println(goutils.ToString(html))
 	// fmt.Println("out:", goutils.ToString(*out))
 	return nil

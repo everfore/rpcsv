@@ -42,7 +42,7 @@ func RPCServe(port string) (net.Listener, error) {
 }
 
 var (
-	theme    *template.Template
+	Theme    *template.Template
 	theme_bs []byte
 )
 
@@ -52,7 +52,7 @@ func init() {
 		theme_bs = goutils.ToByte(theme_s)
 	}
 	var err error
-	theme, err = template.New("theme.thm").Parse(goutils.ToString(theme_bs))
+	Theme, err = template.New("theme.thm").Parse(goutils.ToString(theme_bs))
 	if err != nil {
 		panic("theme error")
 	}
@@ -64,7 +64,7 @@ func UpdataTheme() bool {
 		theme_bs = goutils.ToByte(theme_s)
 	}
 	var err error
-	theme, err = template.New("theme.thm").Parse(goutils.ToString(theme_bs))
+	Theme, err = template.New("theme.thm").Parse(goutils.ToString(theme_bs))
 	if err != nil {
 		panic("theme error")
 	}

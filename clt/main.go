@@ -24,6 +24,10 @@ func connect() {
 	}()
 }
 
+func init()  {
+	rpcsv.UpdataTheme()
+}
+
 func main() {
 	http.HandleFunc("/", index)
 	http.HandleFunc("/markdown", markdown)
@@ -60,12 +64,19 @@ retry:
 		rw.Write(goutils.ToByte(err.Error()))
 		return
 	}
-	if len(out) <= 0 {
-		rw.Write(goutils.ToByte("{response:nil}"))
-		return
+
+	data := make(map[string]interface{})
+	data["MDContent"] = template.HTML(goutils.ToString(out))
+	err = rpcsv.Theme.Execute(rw, data)
+	if goutils.CheckErr(err) {
+		rw.Write(goutils.ToByte(err.Error()))
 	}
-	writeCrossDomainHeaders(rw, req)
-	rw.Write(out)
+	// if len(out) <= 0 {
+	// 	rw.Write(goutils.ToByte("{response:nil}"))
+	// 	return
+	// }
+	// writeCrossDomainHeaders(rw, req)
+	// rw.Write(out)
 }
 
 func writeCrossDomainHeaders(w http.ResponseWriter, req *http.Request) {

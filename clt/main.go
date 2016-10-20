@@ -111,14 +111,22 @@ func markdownCB(rw http.ResponseWriter, req *http.Request) {
 		rw.Write(goutils.ToByte(err.Error()))
 		return
 	}
-	if len(out) <= 0 {
-		rw.Write(goutils.ToByte("{response:nil}"))
-		return
+	// if len(out) <= 0 {
+	// 	rw.Write(goutils.ToByte("{response:nil}"))
+	// 	return
+	// }
+	rw.Write(goutils.ToByte("CallbackFunc("))
+	data := make(map[string]interface{})
+	data["MDContent"] = template.HTML(goutils.ToString(out))
+	err = rpcsv.Theme.Execute(rw, data)
+	if goutils.CheckErr(err) {
+		rw.Write(goutils.ToByte(err.Error()))
 	}
+	rw.Write(goutils.ToByte(")"))
 	writeCrossDomainHeaders(rw, req)
-	fmt.Println(req.RemoteAddr)
-	CallbackFunc := fmt.Sprintf("CallbackFunc(%v);", string(Json(goutils.ToString(out))))
-	fmt.Fprint(rw, CallbackFunc)
+	// fmt.Println(req.RemoteAddr)
+	// CallbackFunc := fmt.Sprintf("CallbackFunc(%v);", string(Json(goutils.ToString(out))))
+	// fmt.Fprint(rw, CallbackFunc)
 }
 
 type CallbackData struct {

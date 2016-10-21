@@ -42,14 +42,16 @@
 	});
 
 	function CallbackFunc (data){
-		// console.log(data.mddata);
-		// alert(data.mddata);
-		$("#markdownContent").html(data.mddata);
+		$("#markdownContent").html(data);
 	}
 	function rpcmd () {
 		$.getJSON("http://markdown.daoapp.io/markdownCB?callback=?",{"rawContent":$("#rawContent").val()},function (data){
-	        console.log(" is a a" + data.mddata);
+	        // console.log(" is a a" + data.mddata);
 	    });
+	    /*$.getJSON("http://127.0.0.1/markdownCB?callback=?",{"rawContent":$("#rawContent").val()},function (data){
+	        console.log(" is a a" + data);
+	        alert(data);
+	    });*/
 		/*$.ajax({  
 	        type : "get",  
 	        url : "http://localhost:80/markdownCB?callback=?",

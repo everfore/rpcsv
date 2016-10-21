@@ -24,7 +24,7 @@ func connect() {
 	}()
 }
 
-func init()  {
+func init() {
 	// rpcsv.UpdataTheme()
 }
 
@@ -101,8 +101,7 @@ func writeCrossDomainHeaders(w http.ResponseWriter, req *http.Request) {
 func markdownCB(rw http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
 	rawContent := req.Form.Get("rawContent")
-	fmt.Println(req.RemoteAddr, req.Referer())
-	// fmt.Println(rawContent)
+	fmt.Println(rawContent)
 	out := make([]byte, 0, 100)
 	in := goutils.ToByte(rawContent)
 	RPC_Client = rpcsv.RPCClient(rpc_tcp_server)
@@ -115,14 +114,14 @@ func markdownCB(rw http.ResponseWriter, req *http.Request) {
 	// 	rw.Write(goutils.ToByte("{response:nil}"))
 	// 	return
 	// }
-	rw.Write(goutils.ToByte("CallbackFunc("))
+	rw.Write(goutils.ToByte("CallbackFunc(`"))
 	data := make(map[string]interface{})
 	data["MDContent"] = template.HTML(goutils.ToString(out))
 	err = rpcsv.Theme.Execute(rw, data)
 	if goutils.CheckErr(err) {
 		rw.Write(goutils.ToByte(err.Error()))
 	}
-	rw.Write(goutils.ToByte(")"))
+	rw.Write(goutils.ToByte("`)"))
 	writeCrossDomainHeaders(rw, req)
 	// fmt.Println(req.RemoteAddr)
 	// CallbackFunc := fmt.Sprintf("CallbackFunc(%v);", string(Json(goutils.ToString(out))))

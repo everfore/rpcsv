@@ -31,12 +31,12 @@ func connect() {
 func init() {
 	// rpcsv.UpdataTheme()
 
-	buf=make([]byte,1024)
+	buf=make([]byte,8096)
 	qiniuWriter= qiniubytes.NewWriter(buf)
 }
 
 func main() {
-	http.HandleFunc("/", index)
+	http.HandleFunc("/v1", index)
 	http.HandleFunc("/v2", indexV2)
 	http.HandleFunc("/markdown", markdown)
 	http.HandleFunc("/markdownCB", markdownCB)

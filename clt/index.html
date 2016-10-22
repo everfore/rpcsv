@@ -45,10 +45,10 @@
 		$("#markdownContent").html(data);
 	}
 	function rpcmd () {
-		/*$.getJSON("http://markdown.daoapp.io/markdownCB?callback=?",{"rawContent":$("#rawContent").val()},function (data){
+		$.getJSON("http://markdown.daoapp.io/markdownCB?callback=?",{"rawContent":$("#rawContent").val()},function (data){
 	        // console.log(" is a a" + data.mddata);
-	    });*/
-	    $.getJSON("http://127.0.0.1/markdownCB?callback=?",{"rawContent":$("#rawContent").val()},function (data){
+	    });
+	    /*$.getJSON("http://127.0.0.1/markdownCB?callback=?",{"rawContent":$("#rawContent").val()},function (data){
 	        console.log(" is a a" + data);
 	    });
 		/*$.ajax({  

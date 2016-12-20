@@ -1,8 +1,8 @@
 package rpcsv
 
 import (
-	"github.com/toukii/goutils"
 	md "github.com/shurcooL/github_flavored_markdown"
+	"github.com/toukii/goutils"
 
 	// "bytes"
 	"fmt"
@@ -32,6 +32,7 @@ func (r *RPC) Markdown(in, out *([]byte)) error {
 	// fmt.Println(goutils.ToString(*in))
 	html := md.Markdown(*in)
 	*out = html
+
 	// goutils.ReWriteFile("tempory.tmp", nil)
 	// of, _ := os.OpenFile("tempory.tmp", os.O_CREATE|os.O_WRONLY, 0666)
 	// defer of.Close()

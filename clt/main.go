@@ -4,19 +4,19 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/everfore/rpcsv"
+	qiniubytes "github.com/qiniu/bytes"
 	"github.com/toukii/goutils"
 	"html/template"
 	"net/http"
 	"net/rpc"
 	"time"
-	qiniubytes "github.com/qiniu/bytes"
 )
 
 var (
 	RPC_Client     *rpc.Client
 	rpc_tcp_server = "tcphub.t0.daoapp.io:61142"
 	// rpc_tcp_server = "127.0.0.1:8800"
-	buf []byte
+	buf         []byte
 	qiniuWriter *qiniubytes.Writer
 )
 
@@ -31,13 +31,13 @@ func connect() {
 func init() {
 	// rpcsv.UpdataTheme()
 
-	buf=make([]byte,8096)
-	qiniuWriter= qiniubytes.NewWriter(buf)
+	buf = make([]byte, 8096)
+	qiniuWriter = qiniubytes.NewWriter(buf)
 }
 
 func main() {
 	http.HandleFunc("/v1", index)
-	http.HandleFunc("/v2", indexV2)
+	http.HandleFunc("/", indexV2)
 	http.HandleFunc("/markdown", markdown)
 	http.HandleFunc("/markdownCB", markdownCB)
 	http.HandleFunc("/markdownCBQiniu", markdownCBQiniu)
@@ -141,7 +141,6 @@ func markdownCB(rw http.ResponseWriter, req *http.Request) {
 	writeCrossDomainHeaders(rw, req)
 }
 
-
 func markdownCBQiniu(rw http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
 	rawContent := req.Form.Get("rawContent")
@@ -164,10 +163,9 @@ func markdownCBQiniu(rw http.ResponseWriter, req *http.Request) {
 		rw.Write(goutils.ToByte(err.Error()))
 	}
 	qiniuWriter.Write(goutils.ToByte("`)"))
-rw.Write(qiniuWriter.Bytes())
+	rw.Write(qiniuWriter.Bytes())
 	writeCrossDomainHeaders(rw, req)
 }
-
 
 type CallbackData struct {
 	Mddata interface{} `json:"mddata"`

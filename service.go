@@ -35,6 +35,7 @@ func (r *RPC) Markdown(in, out *([]byte)) error {
 	// fmt.Println(goutils.ToString(*in))
 	html := md.Markdown(*in)
 	*out = html
+
 	// goutils.ReWriteFile("tempory.tmp", nil)
 	// of, _ := os.OpenFile("tempory.tmp", os.O_CREATE|os.O_WRONLY, 0666)
 	// defer of.Close()

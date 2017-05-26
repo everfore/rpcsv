@@ -24,12 +24,18 @@ type Job struct {
 }
 
 type RPC struct {
-	jobs     map[string]Job
-	back     map[string]chan []byte
-	news     []byte
-	newsSync sync.Once
+	jobs map[string]Job
+	back map[string]chan []byte
 	sync.RWMutex
+	news         []byte
+	newsSync     sync.Once
+	newsInterval time.Duration
 }
+
+var (
+	TiNewsTicker = time.NewTicker(10e9)
+	// TiNewsTicker = time.NewTicker(3 * 3600e9)
+)
 
 func (r *RPC) Markdown(in, out *([]byte)) error {
 	// fmt.Println(goutils.ToString(*in))
@@ -200,29 +206,51 @@ header:
 )
 
 func (r *RPC) TiNews(in *int, out *([]byte)) error {
-	go r.newsSync.Do(func() {
-		halfDay := time.NewTicker(10 * 3600e9)
-		for {
-			req, err := httpvf.ReqFmt(reqbs)
-			if goutils.CheckErr(err) {
-				time.Sleep(10e9)
-				continue
-			}
-
-			bs, err := req.Do()
-			if goutils.CheckErr(err) || bs == nil {
-				time.Sleep(10e9)
-				continue
-			}
-			r.news = bs
-			fmt.Println(time.Now(), "news is updated.")
-			<-halfDay.C
+	r.newsSync.Do(func() {
+		r.newsInterval = time.Second
+		if r.updateNews() {
+			<-TiNewsTicker.C
 		}
 	})
+	select {
+	case <-TiNewsTicker.C:
+		r.updateNews()
+		break
+	default:
+		fmt.Println("暂不更新。")
+	}
 	if r.news != nil {
 		*out = r.news
 	} else {
 		return fmt.Errorf("news nil")
 	}
 	return nil
+}
+
+func (r *RPC) updateNews() bool {
+	for {
+		fmt.Println("尝试更新")
+		if r.newsInterval.Seconds() > 8 {
+			r.newsInterval = 8 * time.Second
+			// return false
+		}
+		req, err := httpvf.ReqFmt(reqbs)
+		if goutils.CheckErr(err) {
+			time.Sleep(r.newsInterval)
+			r.newsInterval *= 2
+			continue
+		}
+
+		bs, err := req.Do()
+		if goutils.CheckErr(err) || bs == nil {
+			time.Sleep(r.newsInterval)
+			r.newsInterval *= 2
+			continue
+		}
+		r.newsInterval = time.Second
+		r.news = bs
+		fmt.Println(time.Now(), "新闻已更新")
+		return true
+	}
+	return false
 }

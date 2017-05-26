@@ -200,19 +200,23 @@ header:
 )
 
 func (r *RPC) TiNews(in *int, out *([]byte)) error {
-	fmt.Println("rpc TiNews", *in)
 	go r.newsSync.Do(func() {
-		req, err := httpvf.ReqFmt(reqbs)
-		if goutils.CheckErr(err) {
-			return
-		}
+		halfDay := time.NewTicker(12 * 3600e9)
+		for {
+			time.Sleep(10e9)
+			req, err := httpvf.ReqFmt(reqbs)
+			if goutils.CheckErr(err) {
+				continue
+			}
 
-		bs, err := req.Do()
-		if goutils.CheckErr(err) {
-			return
+			bs, err := req.Do()
+			if goutils.CheckErr(err) {
+				continue
+			}
+			r.news = bs
+			fmt.Println(time.Now(), "news is updated.")
+			<-halfDay.C
 		}
-		r.news = bs
-		fmt.Println(goutils.ToString(r.news))
 	})
 	if r.news != nil {
 		*out = r.news

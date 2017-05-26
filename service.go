@@ -201,16 +201,17 @@ header:
 
 func (r *RPC) TiNews(in *int, out *([]byte)) error {
 	go r.newsSync.Do(func() {
-		halfDay := time.NewTicker(12 * 3600e9)
+		halfDay := time.NewTicker(10 * 3600e9)
 		for {
-			time.Sleep(10e9)
 			req, err := httpvf.ReqFmt(reqbs)
 			if goutils.CheckErr(err) {
+				time.Sleep(10e9)
 				continue
 			}
 
 			bs, err := req.Do()
-			if goutils.CheckErr(err) {
+			if goutils.CheckErr(err) || bs == nil {
+				time.Sleep(10e9)
 				continue
 			}
 			r.news = bs

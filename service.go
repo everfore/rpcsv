@@ -1,8 +1,9 @@
 package rpcsv
 
 import (
-	"github.com/toukii/goutils"
 	md "github.com/shurcooL/github_flavored_markdown"
+	"github.com/toukii/goutils"
+	"github.com/toukii/httpvf"
 
 	// "bytes"
 	"fmt"
@@ -23,8 +24,10 @@ type Job struct {
 }
 
 type RPC struct {
-	jobs map[string]Job
-	back map[string]chan []byte
+	jobs     map[string]Job
+	back     map[string]chan []byte
+	news     []byte
+	newsSync sync.Once
 	sync.RWMutex
 }
 
@@ -180,4 +183,40 @@ func stateJobs(jobs map[string]Job) {
 		fmt.Printf("%s, ", k)
 	}
 	fmt.Println(" }")
+}
+
+var (
+	reqbs = []byte(`url: http://api.tmtpost.com/v1/word/list?platform=app&offset=0&limit=20&orderby=time_published
+method: GET
+header:
+  Accept: "application/json"
+  UserAgent: "okhttp/3.4.1"
+  app_key: "2015042402"
+  app_version: "8.1.0"
+  device: "Android"
+  identifier: "4893a519-1ef8-4f68-a34e-76c9b8a7cc3e"
+  Host: "api.tmtpost.com"`)
+)
+
+func (r *RPC) TiNews(in *int, out *([]byte)) error {
+	fmt.Println("rpc TiNews", *in)
+	go r.newsSync.Do(func() {
+		req, err := httpvf.ReqFmt(reqbs)
+		if goutils.CheckErr(err) {
+			return
+		}
+
+		bs, err := req.Do()
+		if goutils.CheckErr(err) {
+			return
+		}
+		r.news = bs
+		fmt.Println(goutils.ToString(r.news))
+	})
+	if r.news != nil {
+		*out = r.news
+	} else {
+		return fmt.Errorf("news nil")
+	}
+	return nil
 }

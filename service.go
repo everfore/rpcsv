@@ -27,13 +27,13 @@ type RPC struct {
 	jobs map[string]Job
 	back map[string]chan []byte
 	sync.RWMutex
-	news         []byte
-	newsSync     sync.Once
-	newsInterval time.Duration
+	news         []byte        // news byte buf
+	newsSync     sync.Once     // first req news
+	newsInterval time.Duration // req news interval
 }
 
 var (
-	TiNewsTicker = time.NewTicker(10e9)
+	TiNewsTicker = time.NewTicker(60e9)
 	// TiNewsTicker = time.NewTicker(3 * 3600e9)
 )
 
@@ -193,7 +193,8 @@ func stateJobs(jobs map[string]Job) {
 }
 
 var (
-	reqbs = []byte(`url: http://api.tmtpost.com/v1/word/list?platform=app&offset=0&limit=20&orderby=time_published
+	reqbs = []byte(`#url: http://localhost:8080/TiNewsAPI
+url: http://api.tmtpost.com/v1/word/list?platform=app&offset=0&limit=20&orderby=time_published
 method: GET
 header:
   Accept: "application/json"
@@ -205,19 +206,27 @@ header:
   Host: "api.tmtpost.com"`)
 )
 
+/*
+1. 没有请求，不更新News内容；
+2. 第一次请求，尝试设置News内容，然后返回News内容；
+3. 非第一次请求，按照约定的时间间隔，更新News内容；没有拿到时间片，不更新，直接返回（空或旧的News内容）；
+4. 请求News内容，若出错，尝试[n]次, 每次sleep时间翻倍；最后将时间间隔设置会初始值。
+*/
 func (r *RPC) TiNews(in *int, out *([]byte)) error {
 	r.newsSync.Do(func() {
-		r.newsInterval = time.Second
-		if r.updateNews() {
+		r.newsInterval = time.Millisecond * 200
+		if r.UpdateNews("[FIRST REQ]") {
 			<-TiNewsTicker.C
 		}
 	})
 	select {
 	case <-TiNewsTicker.C:
-		r.updateNews()
+		if !r.UpdateNews(fmt.Sprintf("[新请求:%d]", *in)) {
+			fmt.Println("WOOF,news req failed!")
+		}
 		break
 	default:
-		fmt.Println("暂不更新。")
+		fmt.Println(fmt.Sprintf("[新请求:%d]", *in), "暂不更新。")
 	}
 	if r.news != nil {
 		*out = r.news
@@ -227,12 +236,14 @@ func (r *RPC) TiNews(in *int, out *([]byte)) error {
 	return nil
 }
 
-func (r *RPC) updateNews() bool {
+// req, update news buf, try [3] times most; return true whether update the news, otherwise return false.
+func (r *RPC) UpdateNews(who string) bool {
 	for {
-		fmt.Println("尝试更新")
-		if r.newsInterval.Seconds() > 8 {
-			r.newsInterval = 8 * time.Second
-			// return false
+		fmt.Print(who, "尝试更新，")
+		if r.newsInterval.Seconds() > 3 {
+			r.newsInterval = time.Millisecond * 200
+			fmt.Println("终止重试。")
+			return false
 		}
 		req, err := httpvf.ReqFmt(reqbs)
 		if goutils.CheckErr(err) {
@@ -240,7 +251,6 @@ func (r *RPC) updateNews() bool {
 			r.newsInterval *= 2
 			continue
 		}
-
 		bs, err := req.Do()
 		if goutils.CheckErr(err) || bs == nil {
 			time.Sleep(r.newsInterval)
@@ -249,7 +259,7 @@ func (r *RPC) updateNews() bool {
 		}
 		r.newsInterval = time.Second
 		r.news = bs
-		fmt.Println(time.Now(), "新闻已更新")
+		fmt.Println(time.Now(), who, "新闻已更新。")
 		return true
 	}
 	return false

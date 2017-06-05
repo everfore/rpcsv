@@ -30,11 +30,12 @@ type RPC struct {
 	news         []byte        // news byte buf
 	newsSync     sync.Once     // first req news
 	newsInterval time.Duration // req news interval
+	tiNewsTicker *time.Ticker
 }
 
 var (
-	TiNewsTicker = time.NewTicker(60e9)
-	// TiNewsTicker = time.NewTicker(3 * 3600e9)
+	// TiNewsTicker = time.NewTicker(2e9)
+	TiNewsTicker = time.NewTicker(2 * 3600e9)
 )
 
 func (r *RPC) Markdown(in, out *([]byte)) error {
@@ -215,16 +216,20 @@ header:
 func (r *RPC) TiNews(in *int, out *([]byte)) error {
 	r.newsSync.Do(func() {
 		r.newsInterval = time.Millisecond * 200
+		r.tiNewsTicker = time.NewTicker(2e9)
 		if r.UpdateNews("[FIRST REQ]") {
-			<-TiNewsTicker.C
+			<-r.tiNewsTicker.C
 		}
 	})
+	q := time.NewTicker(1e7)
 	select {
-	case <-TiNewsTicker.C:
+	case <-r.tiNewsTicker.C:
 		if !r.UpdateNews(fmt.Sprintf("[新请求:%d]", *in)) {
 			fmt.Println("WOOF,news req failed!")
 		}
 		break
+	case <-q.C:
+		fmt.Println("[新请求，弃子。]")
 	default:
 		fmt.Println(fmt.Sprintf("[新请求:%d]", *in), "暂不更新。")
 	}

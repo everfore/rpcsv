@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/everfore/exc"
 	"github.com/everfore/rpcsv"
 	"github.com/toukii/bytes"
 	"github.com/toukii/goutils"
@@ -52,6 +53,7 @@ func main() {
 	}
 	err = RenderWriter(in, out)
 	goutils.CheckErr(err)
+	exc.NewCMD("open -b com.google.Chrome " + *outFile).Debug().Execute()
 }
 
 func renderfileName(filename, prefix, suffix string) string {
